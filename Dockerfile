@@ -5,7 +5,7 @@
 ARG									\
 	tag="1.19.0-alpine"
 ARG									\
-	digest="@sha256:ee5a9b68e8d4a4b8b48318ff08ad5489bd1ce52b357bf48c511968a302bc347b"
+	digest="@sha256:bf8ebb8068d7ff10711c1670398eeaa83283a7987cdc9b9b014560dbba71773c"
 FROM									\
 	nginx:${tag}${digest}						\
 		AS nginx
