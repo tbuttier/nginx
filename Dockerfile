@@ -3,7 +3,7 @@
 #      SPDX-License-Identifier:  GPL-2.0-only                           #
 #########################################################################
 ARG									\
-	digest="@sha256:676b8117782d9e8c20af8e1b19356f64acc76c981f3a65c66e33a9874877892a"
+	digest="@sha256:2ba714ccbdc4c2a7b5a5673ebbc8f28e159cf2687a664d540dcb91d325934f32"
 ARG									\
 	port="8080"
 ARG									\
