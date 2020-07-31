@@ -105,8 +105,7 @@ objects:
             emptyDir: {}
           - 
             name: nginx-logs
-            persistentVolumeClaim:
-              claimName: nginx-pvc
+            emptyDir: {}
           - 
             name: default-conf
             secret:
@@ -129,18 +128,6 @@ objects:
           ports:
             -
               port: 8080
-  -
-    apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: nginx-pvc
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-      storageClassName: gp2
   -
     apiVersion: route.openshift.io/v1
     kind: Route
