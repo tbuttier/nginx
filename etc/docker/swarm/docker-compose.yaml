@@ -18,12 +18,11 @@ services:
     -
       source: nginx.conf
       target: /etc/nginx/nginx.conf
-    image: secobau/nginx
+    image: secobau/nginx:${APP_VERSION}${APP_DIGEST}
     networks:
     - my_network
     ports:
-    - 
-      8080:8080
+    - 30001:8080
     secrets:
     -
       source: default.conf
