@@ -18,7 +18,7 @@ services:
     -
       source: nginx.conf
       target: /etc/nginx/nginx.conf
-    image: secobau/nginx:${APP_VERSION}${APP_DIGEST}
+    image: secobau/nginx:latest
     networks:
     - my_network
     ports:
