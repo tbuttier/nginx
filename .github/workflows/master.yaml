@@ -37,7 +37,7 @@ jobs:
         compose=etc/docker/swarm/nginx.yaml
         date=$( date +%s )
         script=.github/bin/check-service.sh
-        test -d run && sudo cp -rv ./run/* /run
+        test -d run && sudo cp -rv run/* /run
         sed -i s/worker/manager/ ${compose}
         sed -i s/image.*$/image:' 'image:${date}/ ${compose}
         docker swarm init
