@@ -35,9 +35,11 @@ services:
       target: /etc/nginx/conf.d/default.conf
     volumes:
     - nginx-cache-vol:/var/cache/nginx
+    - nginx-logs-vol:/var/log/nginx
     - nginx-run-vol:/var/run
 version: "3.8"
 volumes:
   nginx-cache-vol:
+  nginx-logs-vol:
   nginx-run-vol:
 #########################################################################
