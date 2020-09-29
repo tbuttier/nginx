@@ -36,11 +36,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      service: nginx-svc
+      app: nginx
   template:
     metadata:
       labels:
-        service: nginx-svc
+        app: nginx
     spec:
       containers:
       - 
@@ -61,40 +61,40 @@ spec:
           initialDelaySeconds: 1
         volumeMounts:
         - 
-          mountPath: /var/log/nginx
-          name: nginx-logs
-        - 
           mountPath: /etc/nginx/conf.d
-          name: default-conf
+          name: nginx-default-vol
           readOnly: true
         - 
           mountPath: /run/nginx/etc/nginx
-          name: nginx-conf
+          name: nginx-conf-vol
           readOnly: true
         -
           mountPath: /var/cache/nginx
-          name: nginx-cache
+          name: nginx-cache-vol
+        -
+          mountPath: /var/log/nginx
+          name: nginx-logs-vol
         -
           mountPath: /var/run
-          name: nginx-run
+          name: nginx-run-vol
       volumes:
-      -
-        name: nginx-run
-        emptyDir: {}
-      -
-        name: nginx-cache
-        emptyDir: {}
-      - 
-        name: nginx-logs
-        emptyDir: {}
-      - 
-        name: default-conf
-        secret:
-          secretName: default-secret
       - 
         configMap:
           name: nginx-cm
-        name: nginx-conf
+        name: nginx-conf-vol
+      - 
+        name: nginx-default-vol
+        secret:
+          secretName: default-secret
+      -
+        name: nginx-cache-vol
+        emptyDir: {}
+      - 
+        name: nginx-logs-vol
+        emptyDir: {}
+      -
+        name: nginx-run-vol
+        emptyDir: {}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -103,7 +103,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      service: nginx-svc
+      app: nginx
   ingress:
     -
       ports:
@@ -159,7 +159,7 @@ stringData:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: nginx-svc
 spec:
   ports:
   - 
@@ -167,4 +167,4 @@ spec:
     port: 80
     targetPort: 8080
   selector:
-    service: nginx-svc
+    app: nginx
