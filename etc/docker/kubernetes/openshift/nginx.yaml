@@ -1,0 +1,183 @@
+#########################################################################
+#      Copyright (C) 2020        Sebastian Francisco Colomar Bauza      #
+#      SPDX-License-Identifier:  GPL-2.0-only                           #
+#########################################################################
+---
+apiVersion: v1
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes auto;
+    error_log /var/log/nginx/error.log debug;
+    pid /var/run/nginx.pid;
+    events {
+      worker_connections 1024;
+    }
+    http {
+      include /etc/nginx/mime.types;
+      default_type application/octet-stream;
+      log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+        '$status $body_bytes_sent "$http_referer" '
+        '"$http_user_agent" "$http_x_forwarded_for"';
+      access_log /var/log/nginx/access.log  main;
+      sendfile on;
+      keepalive_timeout 65;
+      include /etc/nginx/conf.d/*.conf;
+    }
+kind: ConfigMap
+metadata:
+  name: nginx-cm
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - 
+        image: secobau/nginx:latest
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+        name: nginx-container
+        ports:
+          -
+            containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 1
+        volumeMounts:
+        - 
+          mountPath: /etc/nginx/conf.d
+          name: nginx-default-vol
+          readOnly: true
+        - 
+          mountPath: /run/nginx/etc/nginx
+          name: nginx-conf-vol
+          readOnly: true
+        -
+          mountPath: /var/cache/nginx
+          name: nginx-cache-vol
+        -
+          mountPath: /var/log/nginx
+          name: nginx-logs-vol
+        -
+          mountPath: /var/run
+          name: nginx-run-vol
+      volumes:
+      - 
+        configMap:
+          name: nginx-cm
+        name: nginx-conf-vol
+      - 
+        name: nginx-default-vol
+        secret:
+          secretName: default-secret
+      -
+        name: nginx-cache-vol
+        emptyDir: {}
+      - 
+        name: nginx-logs-vol
+        emptyDir: {}
+      -
+        name: nginx-run-vol
+        emptyDir: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nginx-netpol
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+    -
+      ports:
+        -
+          port: 8080
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: nginx-route
+spec:
+  port:
+    targetPort: 8080
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: nginx-svc
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: default-secret
+type: Opaque
+stringData:
+  default.conf: |
+    server {
+        listen       8080;
+        #listen  [::]:8080;
+        server_name  localhost;
+        #charset koi8-r;
+        #access_log  /var/log/nginx/host.access.log  main;
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+        #error_page  404              /404.html;
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:8080
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  ports:
+  - 
+    port: 80
+    targetPort: 8080
+  selector:
+    app: nginx
