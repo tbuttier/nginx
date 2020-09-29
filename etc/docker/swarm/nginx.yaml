@@ -19,7 +19,7 @@ services:
       mode: 0400
       source: nginx.conf
       target: /etc/nginx/nginx.conf
-    image: secobau/nginx:latest
+    image: secobau/nginx:6.1
     networks:
     - my_network
     ports:
