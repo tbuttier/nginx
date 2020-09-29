@@ -31,17 +31,18 @@ jobs:
 
     # Runs a set of commands using the runners shell
     - 
+      env:
+        mode: swarm
       name: Test the app
       run: |
         set -x
-        compose=etc/docker/swarm/nginx.yaml
+        compose=etc/docker/${mode}/$( basename ${GITHUB_REPOSITORY} ).yaml
         date=$( date +%s )
-        script=.github/bin/check-service.sh
+        script=.github/bin/check-service-${mode}.sh
         test -d run && sudo cp -rv run/* /run
-        sed -i s/worker/manager/ ${compose}
-        sed -i s/image.*$/image:' 'image:${date}/ ${compose}
-        docker swarm init
+        sed -i s/image.*$/image:' '${mode}:${date}/ ${compose}
         docker build -t image:${date} --no-cache .
+        docker swarm init
+        sed -i s/worker/manager/ ${compose}
         docker stack deploy -c ${compose} test
-        chmod +x ${script}
-        ./${script}
+        chmod +x ${script} && ./${script}
