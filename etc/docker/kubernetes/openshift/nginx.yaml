@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - 
-        image: secobau/nginx:latest
+        image: secobau/nginx:6.2
         livenessProbe:
           httpGet:
             path: /
