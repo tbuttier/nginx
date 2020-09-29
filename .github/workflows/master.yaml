@@ -41,8 +41,11 @@ jobs:
         script=.github/bin/check-service-${mode}.sh
         test -d run && sudo cp -rv run/* /run
         sed -i s/image.*$/image:' '${mode}:${date}/ ${compose}
-        docker build -t image:${date} --no-cache .
+        docker build -t ${mode}:${date} --no-cache .
+        if test ${mode} = swarm
+        then
         docker swarm init
         sed -i s/worker/manager/ ${compose}
         docker stack deploy -c ${compose} test
+        fi
         chmod +x ${script} && ./${script}
