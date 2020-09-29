@@ -72,9 +72,6 @@ spec:
           mountPath: /var/cache/nginx
           name: nginx-cache-vol
         -
-          mountPath: /var/log/nginx
-          name: nginx-logs-vol
-        -
           mountPath: /var/run
           name: nginx-run-vol
       volumes:
@@ -88,9 +85,6 @@ spec:
           secretName: default-secret
       -
         name: nginx-cache-vol
-        emptyDir: {}
-      - 
-        name: nginx-logs-vol
         emptyDir: {}
       -
         name: nginx-run-vol
