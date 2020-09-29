@@ -206,7 +206,7 @@ parameters:
     displayName: Application Version
     name: APP_VERSION
     required: true
-    value: 'latest'
+    value: '6.1'
   -
     description: The application digest.
     displayName: Application Digest
