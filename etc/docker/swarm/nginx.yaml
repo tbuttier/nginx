@@ -23,7 +23,7 @@ services:
       placement:
         constraints:
         - node.role == worker
-    image: secobau/nginx:latest
+    image: secobau/nginx:6.1
     networks:
     - my_network
     ports:
