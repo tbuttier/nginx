@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - 
-        image: secobau/nginx:latest
+        image: secobau/nginx:6.1
         livenessProbe:
           httpGet:
             path: /
