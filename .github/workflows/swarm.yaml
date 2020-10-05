@@ -6,6 +6,7 @@ jobs:
   swarm: 
     env:
       mode: swarm
+      port: 30001
     runs-on: ubuntu-latest
     steps:
     -
@@ -38,5 +39,15 @@ jobs:
           do
             sleep 1
             docker service ls
-            docker service ls | grep '\([0-9]\)/\1' && break
+            docker service ls | grep '\([0-9]\)/\1' && break            
+          done
+    -
+      run: |
+
+        set -x
+          
+        while true
+          do
+            sleep 1           
+            curl localhost:$port | grep 'Welcome to nginx!' && break
           done
