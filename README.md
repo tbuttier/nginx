@@ -1,4 +1,4 @@
-![CI-swarm](https://github.com/secobau/nginx/workflows/CI-swarm/badge.svg)
+![CI-swarm](https://github.com/tbuttier/nginx/workflows/CI-swarm/badge.svg)
 
 # Usage
 
