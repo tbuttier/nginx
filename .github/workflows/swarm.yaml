@@ -24,9 +24,12 @@ jobs:
       
         compose=etc/docker/$mode/$project.yaml        
         sed -i s/latest/$mode-$date/ $compose
-        
+        sudo cp -rv run/* /run
+
+        #Para Swarm
         docker swarm init
-        sed -i s/worker/manager/ $compose
+        sed -i s/worker/manager/ $compose        
+        
         docker stack deploy -c $compose $project
 
         while true
