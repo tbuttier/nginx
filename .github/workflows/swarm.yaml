@@ -31,7 +31,8 @@ jobs:
         sed -i s/worker/manager/ $compose        
         
         docker stack deploy -c $compose $project
-        sudo rm -rfv /run/*
+        sudo rm -rfv /run/configs/$project
+        sudo rm -rfv /run/secrets/$project
         
         while true
           do
