@@ -36,10 +36,10 @@ spec:
           initialDelaySeconds: 1
         resources:
           limits: 
-            cpu: '1m'
+            cpu: '100m'
             memory: '16Mi'
           requests: 
-            cpu: '1m'
+            cpu: '100m'
             memory: '16Mi'
         volumeMounts:
         - 
