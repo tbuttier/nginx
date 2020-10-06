@@ -1,4 +1,5 @@
 ![CI-swarm](https://github.com/tbuttier/nginx/workflows/CI-swarm/badge.svg)
+![ci/dockercloud]
 
 # Usage
 
