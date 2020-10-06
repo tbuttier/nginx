@@ -36,9 +36,11 @@ spec:
           initialDelaySeconds: 1
         resources:
           limits: 
-            memory: '16Mi'
+            cpu: '100m'
+            memory: '32Mi'
           requests: 
-            memory: '16Mi'
+            cpu: '100m'
+            memory: '32Mi'
         volumeMounts:
         - 
           mountPath: /etc/nginx/conf.d
